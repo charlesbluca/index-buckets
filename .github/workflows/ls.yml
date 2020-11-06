@@ -1,15 +1,14 @@
 name: index buckets
 on:
-  # runs 4x daily at 0,6,12,18:00 UTC
-  schedule:
-    - cron: "0 */6 * * *"
+  push:
+    branches:
+      - main
+
 jobs:
-  # CMIP/NCAR only
-  CMIP__NCAR:
+  rclone:
     runs-on: ubuntu-latest
     steps:
-      - name: GCS to S3 sync
-        uses: wei/rclone@v1.1.1
+      - uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
           RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS }}
