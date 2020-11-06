@@ -8,9 +8,21 @@ jobs:
   rclone:
     runs-on: ubuntu-latest
     steps:
-      - uses: wei/rclone@v1.1.1
+      - name: List bucket
+        uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
           RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS }}
         with:
           args: "lsd s3:cmip6-pds"
+  aws:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: List bucket
+        run: |
+          aws s3 ls s3://cmip6-pds
