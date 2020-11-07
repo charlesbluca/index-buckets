@@ -2,7 +2,7 @@ name: index buckets
 on:
   push:
     branches:
-      - dummy
+      - main
 
 jobs:
   gsutil_s3:
