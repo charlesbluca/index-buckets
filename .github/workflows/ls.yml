@@ -37,7 +37,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: lsl --fast-list s3:cmip6-pds > output.txt
+          args: lsl s3:cmip6-pds > output.txt
   rclone_gs:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +47,7 @@ jobs:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
           RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         with:
-          args: lsl --fast-list gs:cmip6 > output.txt
+          args: lsl gs:cmip6 > output.txt
   aws:
     runs-on: ubuntu-latest
     steps:
