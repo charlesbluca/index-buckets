@@ -2,7 +2,7 @@ name: index buckets (checksum)
 on:
   push:
     branches:
-      - nonexistent
+      - main
 
 jobs:
   gsutil_s3:
@@ -18,7 +18,7 @@ jobs:
           aws-region: us-west-2
       - name: List bucket
         run: |
-          gsutil ls s3://cmip6-pds/** > output.txt
+          gsutil hash -m s3://cmip6-pds/** > output.txt
   gsutil_gs:
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +28,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
       - name: List bucket
         run: |
-          gsutil ls gs://cmip6/** > output.txt
+          gsutil hash -m gs://cmip6/** > output.txt
   rclone_s3:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +37,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: ls s3:cmip6-pds > output.txt
+          args: hashsum MD5 s3:cmip6-pds > output.txt
   rclone_gs:
     runs-on: ubuntu-latest
     steps:
@@ -47,32 +47,4 @@ jobs:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
           RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         with:
-          args: ls gs:cmip6 > output.txt
-  aws:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-      - name: List bucket
-        run: |
-          aws s3 ls s3://cmip6-pds --recursive > output.txt
-  s3p:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-      - name: List bucket
-        run: |
-          npx s3p ls --bucket cmip6-pds > output.txt
+          args: hashsum MD5 gs:cmip6 > output.txt
