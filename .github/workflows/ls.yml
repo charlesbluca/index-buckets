@@ -2,7 +2,7 @@ name: index buckets
 on:
   push:
     branches:
-      - main
+      - nonexistent
 
 jobs:
   gsutil_s3:
@@ -18,7 +18,7 @@ jobs:
           aws-region: us-west-2
       - name: List bucket
         run: |
-          gsutil ls -l s3://cmip6-pds/** > output.txt
+          gsutil ls s3://cmip6-pds/** > output.txt
   gsutil_gs:
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +28,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
       - name: List bucket
         run: |
-          gsutil ls -l gs://cmip6/** > output.txt
+          gsutil ls gs://cmip6/** > output.txt
   rclone_s3:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +37,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: lsl s3:cmip6-pds > output.txt
+          args: ls s3:cmip6-pds > output.txt
   rclone_gs:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +47,7 @@ jobs:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
           RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         with:
-          args: lsl gs:cmip6 > output.txt
+          args: ls gs:cmip6 > output.txt
   aws:
     runs-on: ubuntu-latest
     steps:
@@ -75,4 +75,4 @@ jobs:
           aws-region: us-west-2
       - name: List bucket
         run: |
-          npx s3p ls --bucket cmip6-pds --long > output.txt
+          npx s3p ls --bucket cmip6-pds > output.txt
