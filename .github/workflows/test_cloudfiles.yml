@@ -22,7 +22,7 @@ jobs:
         with:
           name: "aws-secret.json"
           json: ${{ secrets.AWS_SERVICE_ACCOUNT_CREDENTIALS }}
-          dir: ".cloudvolume/secrets/"
+          dir: "/home/runner/.cloudvolume/secrets/"
       - name: List bucket
         run: |
           cloudfiles ls s3://cmip6-pds/
