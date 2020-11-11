@@ -1,4 +1,4 @@
-name: testing mc
+name: testing cloudfiles
 on:
   workflow_dispatch:
 
