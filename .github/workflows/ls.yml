@@ -1,8 +1,6 @@
 name: index buckets
 on:
-  push:
-    branches:
-      - nonexistent
+  workflow_dispatch:
 
 jobs:
   gsutil_s3:
