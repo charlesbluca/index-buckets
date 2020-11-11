@@ -1,0 +1,37 @@
+name: testing mc
+on:
+  workflow_dispatch:
+
+jobs:
+  mc_s3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install MinIO Client
+        run: |
+          wget https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+      - name: Configure S3 secrets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          ./mc alias set s3 https://s3.amazonaws.com "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
+      - name: List bucket
+        run: |
+          ./mc ls s3/cmip6-pds
+  mc_gs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install MinIO Client
+        run: |
+          wget https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+      - name: Configure Google Cloud secrets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GCP_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GCP_SECRET_ACCESS_KEY }}
+        run: |
+          ./mc alias set gs https://storage.googleapis.com "$GCP_ACCESS_KEY_ID" "$GCP_SECRET_ACCESS_KEY"
+      - name: List bucket
+        run: |
+          ./mc ls gs/cmip6
