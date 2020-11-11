@@ -13,16 +13,15 @@ jobs:
       - name: Install CloudFiles
         run: |
           pip install cloud-files
-          mkdir -p ~/.cloudvolume/secrets/
-      - name: Look for home directory
-        run: |
-          echo ~
-      - name: Configure S3 secrets
+      - name: Write S3 secrets to JSON
         uses: jsdaniell/create-json@1.1.2
         with:
           name: "aws-secret.json"
           json: ${{ secrets.AWS_SERVICE_ACCOUNT_CREDENTIALS }}
-          dir: "/home/runner/.cloudvolume/secrets/"
+      - name: Configure S3 secrets
+        run: |
+          mkdir -p ~/.cloudvolume/secrets/
+          mv ./aws-secret.json ~/.cloudvolume/secrets/
       - name: List bucket
         run: |
           cloudfiles ls s3://cmip6-pds/
