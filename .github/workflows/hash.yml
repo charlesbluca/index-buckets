@@ -1,8 +1,6 @@
 name: index buckets (checksum)
 on:
-  push:
-    branches:
-      - none
+  workflow_dispatch:
 
 jobs:
   gsutil_s3:
