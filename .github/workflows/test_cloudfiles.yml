@@ -13,15 +13,10 @@ jobs:
       - name: Install CloudFiles
         run: |
           pip install cloud-files
-      - name: Write S3 secrets to JSON
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "aws-secret.json"
-          json: ${{ secrets.AWS_SERVICE_ACCOUNT_CREDENTIALS }}
-      - name: Configure S3 secrets
-        run: |
-          mkdir -p ~/.cloudvolume/secrets/
-          mv ./aws-secret.json ~/.cloudvolume/secrets/
       - name: List bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: |
           cloudfiles ls s3://cmip6-pds/
