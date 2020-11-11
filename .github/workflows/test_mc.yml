@@ -34,4 +34,4 @@ jobs:
           ./mc alias set gs https://storage.googleapis.com "$GCP_ACCESS_KEY_ID" "$GCP_SECRET_ACCESS_KEY"
       - name: List bucket
         run: |
-          ./mc ls gs/cmip6-pds
+          ./mc ls gs/cmip6
