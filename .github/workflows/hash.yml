@@ -2,7 +2,7 @@ name: index buckets (checksum)
 on:
   push:
     branches:
-      - main
+      - none
 
 jobs:
   gsutil_s3:
