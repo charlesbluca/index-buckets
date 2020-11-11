@@ -18,7 +18,7 @@ jobs:
           AWS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.AWS_SERVICE_ACCOUNT_CREDENTIALS }}
         run: |
           mkdir -p ~/.cloudvolume/secrets/
-          echo '$AWS_SERVICE_ACCOUNT_CREDENTIALS' > ~/.cloudvolume/secrets/aws-secret.json
+          echo -e "$AWS_SERVICE_ACCOUNT_CREDENTIALS" > ~/.cloudvolume/secrets/aws-secret.json
       - name: List bucket
         run: |
           cloudfiles ls s3://cmip6-pds/
