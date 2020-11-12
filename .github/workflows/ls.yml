@@ -46,6 +46,73 @@ jobs:
           RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_CREDENTIALS }}
         with:
           args: ls gs:cmip6 > output.txt
+  cloudfiles_s3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+      - name: Install CloudFiles
+        run: |
+          pip install cloud-files
+      - name: List bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          cloudfiles ls s3://cmip6-pds/ > output.txt
+  cloudfiles_gs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure Google Cloud Credentials
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_CREDENTIALS }}
+          export_default_credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+      - name: Install CloudFiles
+        run: |
+          pip install cloud-files
+      - name: List bucket
+        run: |
+          cloudfiles ls gs://cmip6/ > output.txt
+  mc_s3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install MinIO Client
+        run: |
+          wget https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+      - name: Configure S3 secrets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          ./mc alias set s3 https://s3.amazonaws.com "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
+      - name: List bucket
+        run: |
+          ./mc ls s3/cmip6-pds --recursive > output.txt
+  mc_gs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install MinIO Client
+        run: |
+          wget https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+      - name: Configure Google Cloud secrets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GCP_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GCP_SECRET_ACCESS_KEY }}
+        run: |
+          ./mc alias set gs https://storage.googleapis.com "$GCP_ACCESS_KEY_ID" "$GCP_SECRET_ACCESS_KEY"
+      - name: List bucket
+        run: |
+          ./mc ls gs/cmip6 --recursive > output.txt
   aws:
     runs-on: ubuntu-latest
     steps:
