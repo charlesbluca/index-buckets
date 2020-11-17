@@ -23,7 +23,7 @@ jobs:
       - name: Set up gsutil
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_CREDENTIALS }}
       - name: List bucket
         run: |
           gsutil hash -m gs://cmip6/** > output.txt
@@ -43,7 +43,7 @@ jobs:
         uses: wei/rclone@v1.1.1
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
-          RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+          RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_CREDENTIALS }}
         with:
           args: hashsum MD5 gs:cmip6 > output.txt
   s3p:
