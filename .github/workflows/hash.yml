@@ -46,3 +46,19 @@ jobs:
           RCLONE_GCS_SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         with:
           args: hashsum MD5 gs:cmip6 > output.txt
+  s3p:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: List bucket
+        run: |
+          npx s3p each --bucket cmip6-pds --map "js:(item) => console.log(item.ETag.slice(1,-1)+'  '+item.Key)" --quiet > output.txt
